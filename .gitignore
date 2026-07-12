@@ -1,0 +1,26 @@
+# Customer data 
+*.csv 
+*.xlsx 
+*.xls 
+
+# Environment and secret files 
+.env 
+.env.* 
+config.local.js 
+secrets.* 
+*.key 
+*.pem 
+
+# Operating system files 
+.DS_Store 
+Thumbs.db 
+
+# Visual Studio Code local settings 
+.vscode/ 
+
+# Node files, if added later 
+node_modules/ 
+
+# Temporary files 
+*.tmp 
+ *.log

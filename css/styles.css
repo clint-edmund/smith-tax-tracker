@@ -1,0 +1,189 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+  background: #f4f6f8;
+  color: #1f2933;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 16px;
+  background: #173f5f;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #c7d0d9;
+  border-radius: 6px;
+  padding: 9px 11px;
+  background: white;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.login-container {
+  width: min(420px, calc(100% - 32px));
+}
+
+.login-card {
+  padding: 32px;
+  border-radius: 12px;
+  background: white;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.09);
+}
+
+.login-card h1,
+.login-card h2 {
+  margin-top: 0;
+}
+
+.login-card label {
+  display: block;
+  margin: 16px 0 6px;
+  font-weight: 700;
+}
+
+.login-card button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+#login-message {
+  min-height: 24px;
+  color: #9b1c1c;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 32px;
+  background: #173f5f;
+  color: white;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+.app-header p {
+  margin: 6px 0 0;
+}
+
+.app-header button {
+  background: white;
+  color: #173f5f;
+}
+
+.app-container {
+  width: min(1400px, calc(100% - 32px));
+  margin: 30px auto;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+}
+
+.summary-card {
+  padding: 20px;
+  border-radius: 10px;
+  background: white;
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.summary-card span {
+  display: block;
+  color: #52606d;
+}
+
+.summary-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.8rem;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+th {
+  background: #eaf0f5;
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background: #f5f9fc;
+}
+
+@media (max-width: 700px) {
+  .app-header {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .app-container {
+    width: min(100% - 20px, 1400px);
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+}
