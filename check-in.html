@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <meta name="robots" content="noindex,nofollow">
+  <title>Walk-In Check-In | Smith Enterprises</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body class="kiosk-page">
+  <main class="kiosk-shell">
+    <header class="kiosk-header">
+      <div class="brand-mark">SE</div>
+      <div>
+        <h1>Smith Enterprises Walk-In Check-In</h1>
+        <p>
+          Complete this form before meeting with the receptionist.
+        </p>
+      </div>
+    </header>
+
+    <p
+      id="check-in-message"
+      class="page-message"
+      role="status"
+    ></p>
+
+    <form id="check-in-form" autocomplete="off">
+      <div class="honeypot-field" aria-hidden="true">
+        <label>
+          Company website
+          <input
+            id="company-website"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+          >
+        </label>
+      </div>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Personal information</h2>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            First name
+            <input
+              id="first-name"
+              name="first_name"
+              maxlength="80"
+              required
+            >
+          </label>
+
+          <label>
+            Middle name
+            <input
+              id="middle-name"
+              name="middle_name"
+              maxlength="80"
+            >
+          </label>
+
+          <label>
+            Last name
+            <input
+              id="last-name"
+              name="last_name"
+              maxlength="80"
+              required
+            >
+          </label>
+
+          <label>
+            Client type
+            <select id="client-type" name="client_type">
+              <option value="Individual">Individual</option>
+              <option value="Business">Business</option>
+              <option value="Nonprofit">Nonprofit</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label class="span-2">
+            Business name
+            <input
+              id="business-name"
+              name="business_name"
+              maxlength="160"
+            >
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Contact information</h2>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Email address
+            <input
+              id="email"
+              name="email"
+              type="email"
+              maxlength="254"
+              required
+            >
+          </label>
+
+          <label>
+            Mobile phone
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              maxlength="30"
+              required
+            >
+          </label>
+
+          <label>
+            Preferred contact method
+            <select
+              id="preferred-contact-method"
+              name="preferred_contact_method"
+            >
+              <option value="Phone">Phone</option>
+              <option value="Email">Email</option>
+              <option value="Text">Text</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Mailing address</h2>
+        </div>
+
+        <div class="form-grid">
+          <label class="span-2">
+            Street address
+            <input
+              id="address-line-1"
+              name="address_line_1"
+              maxlength="160"
+              required
+            >
+          </label>
+
+          <label class="span-2">
+            Apartment, suite, or unit
+            <input
+              id="address-line-2"
+              name="address_line_2"
+              maxlength="120"
+            >
+          </label>
+
+          <label>
+            City
+            <input
+              id="city"
+              name="city"
+              maxlength="100"
+              required
+            >
+          </label>
+
+          <label>
+            State
+            <input
+              id="state"
+              name="state"
+              maxlength="2"
+              pattern="[A-Za-z]{2}"
+              placeholder="MD"
+              required
+            >
+          </label>
+
+          <label>
+            ZIP code
+            <input
+              id="postal-code"
+              name="postal_code"
+              maxlength="10"
+              required
+            >
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Identification readiness</h2>
+        </div>
+
+        <div class="security-callout">
+          For your protection, enter only the last four characters of
+          your driver's-license number. Staff will verify the complete
+          document in person.
+        </div>
+
+        <div class="form-grid">
+          <label>
+            License state
+            <input
+              id="drivers-license-state"
+              name="drivers_license_state"
+              maxlength="2"
+              pattern="[A-Za-z]{2}"
+            >
+          </label>
+
+          <label>
+            License expiration
+            <input
+              id="drivers-license-expiration"
+              name="drivers_license_expiration"
+              type="date"
+            >
+          </label>
+
+          <label>
+            License number — last four
+            <input
+              id="drivers-license-last-four"
+              name="drivers_license_last_four"
+              minlength="4"
+              maxlength="4"
+              autocomplete="off"
+            >
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Direct-deposit readiness</h2>
+        </div>
+
+        <div class="security-callout">
+          Do not enter complete bank account or routing numbers.
+          Enter only the last four digits. Staff will verify the
+          complete information directly in the authorized tax software.
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Direct deposit requested
+            <select
+              id="direct-deposit-requested"
+              name="direct_deposit_requested"
+            >
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </label>
+
+          <label>
+            Account type
+            <select
+              id="bank-account-type"
+              name="bank_account_type"
+            >
+              <option value="">Not selected</option>
+              <option value="Checking">Checking</option>
+              <option value="Savings">Savings</option>
+            </select>
+          </label>
+
+          <label>
+            Bank name
+            <input
+              id="bank-name"
+              name="bank_name"
+              maxlength="120"
+            >
+          </label>
+
+          <label>
+            Routing number — last four
+            <input
+              id="routing-last-four"
+              name="routing_last_four"
+              inputmode="numeric"
+              pattern="[0-9]{4}"
+              minlength="4"
+              maxlength="4"
+              autocomplete="off"
+            >
+          </label>
+
+          <label>
+            Account number — last four
+            <input
+              id="account-last-four"
+              name="account_last_four"
+              inputmode="numeric"
+              pattern="[0-9]{4}"
+              minlength="4"
+              maxlength="4"
+              autocomplete="off"
+            >
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label class="consent-row">
+          <input
+            id="consent"
+            name="consent"
+            type="checkbox"
+            required
+          >
+          <span>
+            I confirm that this information is accurate and authorize
+            Smith Enterprises staff to use it for client check-in and
+            tax-preparation workflow purposes.
+          </span>
+        </label>
+
+        <div class="form-actions">
+          <button
+            id="submit-check-in"
+            type="submit"
+            class="primary"
+          >
+            Submit Check-In
+          </button>
+        </div>
+      </section>
+    </form>
+
+    <section id="confirmation-panel" class="panel hidden">
+      <h2>Check-in submitted</h2>
+      <p>
+        Please provide this confirmation number to the receptionist:
+      </p>
+      <div id="confirmation-code" class="confirmation-code"></div>
+      <p>
+        For your privacy, this screen does not display your submitted
+        information.
+      </p>
+      <button id="start-over" class="primary">
+        Start New Check-In
+      </button>
+    </section>
+  </main>
+
+  <script type="module" src="./js/check-in.js"></script>
+</body>
+</html>

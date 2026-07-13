@@ -229,3 +229,132 @@ tbody tr[data-id]:hover { background: #f8fbfd; }
   .toolbar { grid-template-columns: 1fr; }
   .panel { padding: 16px; }
 }
+
+
+/* Version 3 walk-in intake */
+
+.kiosk-page {
+  background: #eef3f7;
+}
+
+.kiosk-shell {
+  width: min(980px, calc(100% - 24px));
+  margin: 24px auto 60px;
+}
+
+.kiosk-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--navy);
+  color: white;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.kiosk-header h1 {
+  margin: 0 0 6px;
+}
+
+.kiosk-header p {
+  margin: 0;
+  opacity: 0.88;
+}
+
+.security-callout {
+  border-left: 4px solid var(--navy);
+  background: var(--blue-soft);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  line-height: 1.45;
+}
+
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+}
+
+.consent-row input {
+  width: auto;
+  margin-top: 4px;
+}
+
+.confirmation-code {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: var(--blue-soft);
+  color: var(--navy-dark);
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 10px 0 20px;
+}
+
+.button-link {
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 7px;
+  padding: 10px 14px;
+  background: var(--navy);
+  color: white;
+  font-weight: 700;
+}
+
+.status-badge {
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--navy);
+  padding: 7px 11px;
+  font-weight: 700;
+}
+
+.match-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  max-height: 440px;
+  overflow: auto;
+}
+
+.match-card {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  width: 100%;
+  border: 1px solid var(--border);
+  background: white;
+}
+
+.match-card span {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.selected-match {
+  background: var(--blue-soft);
+  border-radius: 7px;
+  padding: 11px;
+  font-weight: 700;
+}
+
+.action-wrap {
+  flex-wrap: wrap;
+}
+
+.intake-details dd {
+  min-height: 22px;
+}
+
+
+.honeypot-field {
+  position: absolute !important;
+  left: -10000px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}

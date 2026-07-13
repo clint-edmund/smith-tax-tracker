@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Walk-In Intakes | Smith Tax Tracker</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Smith Enterprises Tax Tracker</h1>
+      <p data-employee-name></p>
+    </div>
+
+    <nav class="app-nav">
+  <button data-nav="dashboard">Dashboard</button>
+  <button data-nav="clients">Clients</button>
+  <button data-nav="intakes">Intakes</button>
+  <button
+    data-nav="reports"
+    data-roles="administrator,office_manager,senior_preparer,preparer,bookkeeper,read_only"
+  >Reports</button>
+  <button
+    data-nav="employees"
+    data-roles="administrator,office_manager"
+  >Employees</button>
+  <button
+    data-nav="import"
+    data-roles="administrator,office_manager"
+  >Import</button>
+  <button data-nav="settings">Settings</button>
+  <button data-logout>Sign Out</button>
+</nav>
+  </header>
+
+  <main class="app-container">
+    <section class="page-heading">
+      <div>
+        <h2>Walk-In Intakes</h2>
+        <p>Review new walk-in submissions and match them to client records.</p>
+      </div>
+    </section>
+
+    
+<section class="kpi-grid">
+  <article class="kpi-card">
+    <span>Submitted</span>
+    <strong id="submitted-count">0</strong>
+  </article>
+
+  <article class="kpi-card">
+    <span>Possible matches</span>
+    <strong id="possible-match-count">0</strong>
+  </article>
+
+  <article class="kpi-card">
+    <span>Needs correction</span>
+    <strong id="correction-count">0</strong>
+  </article>
+
+  <article class="kpi-card">
+    <span>Completed today</span>
+    <strong id="completed-today-count">0</strong>
+  </article>
+</section>
+
+<section class="toolbar">
+  <input
+    id="intake-search"
+    type="search"
+    placeholder="Search confirmation, name, email, or phone"
+  >
+
+  <select id="intake-status-filter">
+    <option value="">All statuses</option>
+    <option>Submitted</option>
+    <option>Under Review</option>
+    <option>Possible Match</option>
+    <option>Matched to Existing Client</option>
+    <option>New Client Created</option>
+    <option>Needs Correction</option>
+    <option>Completed</option>
+    <option>Rejected</option>
+  </select>
+
+  <button id="refresh-intakes">Refresh</button>
+</section>
+
+<section class="panel">
+  <div class="panel-heading">
+    <h3>Walk-in intake queue</h3>
+
+    <a
+      class="button-link"
+      href="./check-in.html"
+      target="_blank"
+      rel="noopener"
+    >
+      Open Kiosk Form
+    </a>
+  </div>
+
+  <p id="intakes-message" class="page-message"></p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Confirmation</th>
+          <th>Client</th>
+          <th>Submitted</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Potential client</th>
+        </tr>
+      </thead>
+
+      <tbody id="intakes-body"></tbody>
+    </table>
+  </div>
+</section>
+
+  </main>
+
+  <script type="module" src="./js/intakes.js"></script>
+</body>
+</html>
