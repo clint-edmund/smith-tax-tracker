@@ -2,112 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | Smith Tax Tracker</title>
   <link rel="stylesheet" href="./css/styles.css">
 </head>
-
 <body>
   <header class="app-header">
     <div>
       <h1>Smith Enterprises Tax Tracker</h1>
-      <p id="employee-name"></p>
+      <p data-employee-name></p>
     </div>
+    
+<nav class="app-nav">
+  <button data-nav="dashboard">Dashboard</button>
+  <button data-nav="clients">Clients</button>
+  <button data-nav="reports">Reports</button>
+  <button data-nav="employees" data-admin-only>Employees</button>
+  <button data-nav="import" data-admin-only>Import</button>
+  <button data-nav="settings">Settings</button>
+  <button data-logout>Sign Out</button>
+</nav>
 
-    <nav class="header-actions">
-      <button id="clients-button">All Clients</button>
-      <button id="logout-button">Sign Out</button>
-    </nav>
   </header>
 
   <main class="app-container">
-    <section class="dashboard-grid">
-      <article class="summary-card">
-        <span>Total Returns</span>
-        <strong id="total-returns">0</strong>
-      </article>
-
-      <article class="summary-card">
-        <span>Documents Received</span>
-        <strong id="documents-received">0</strong>
-      </article>
-
-      <article class="summary-card">
-        <span>In Preparation</span>
-        <strong id="in-preparation">0</strong>
-      </article>
-
-      <article class="summary-card">
-        <span>Waiting for Client</span>
-        <strong id="waiting-client">0</strong>
-      </article>
-
-      <article class="summary-card">
-        <span>Completed</span>
-        <strong id="completed">0</strong>
-      </article>
-
-      <article class="summary-card">
-        <span>Outstanding Balance</span>
-        <strong id="outstanding-balance">$0.00</strong>
-      </article>
+    <section class="page-heading">
+      <div>
+        <h2>Dashboard</h2>
+        <p>Current workload, deadlines, and outstanding balances.</p>
+      </div>
     </section>
+    
+<p id="dashboard-message" class="page-message"></p>
 
-    <section class="toolbar">
-      <input
-        id="search-input"
-        type="search"
-        placeholder="Search customer name or client number"
-      >
+<section class="kpi-grid">
+  <article class="kpi-card"><span>Total returns</span><strong id="kpi-total">0</strong></article>
+  <article class="kpi-card"><span>Waiting for client</span><strong id="kpi-waiting">0</strong></article>
+  <article class="kpi-card"><span>Ready to file</span><strong id="kpi-ready">0</strong></article>
+  <article class="kpi-card"><span>Completed</span><strong id="kpi-completed">0</strong></article>
+  <article class="kpi-card"><span>Overdue follow-ups</span><strong id="kpi-overdue">0</strong></article>
+  <article class="kpi-card"><span>Outstanding balance</span><strong id="kpi-balance">$0.00</strong></article>
+</section>
 
-      <select id="status-filter">
-        <option value="">All statuses</option>
-        <option>Documents Received</option>
-        <option>Initial Review</option>
-        <option>Missing Information</option>
-        <option>Waiting for Client</option>
-        <option>Ready for Preparation</option>
-        <option>In Preparation</option>
-        <option>Ready for Quality Review</option>
-        <option>Corrections Required</option>
-        <option>Ready for Client Signature</option>
-        <option>Ready to File</option>
-        <option>E-Filed</option>
-        <option>Federal Accepted</option>
-        <option>State Accepted</option>
-        <option>Rejected</option>
-        <option>Amendment Required</option>
-        <option>Completed</option>
-        <option>On Hold</option>
-        <option>Cancelled</option>
-      </select>
+<section class="content-grid two-column">
+  <article class="panel">
+    <div class="panel-heading">
+      <h3>Return pipeline</h3>
+      <button id="open-clients">Open clients</button>
+    </div>
+    <div id="status-summary" class="status-list"></div>
+  </article>
 
-      <button id="add-client-button">Add Client</button>
-    </section>
+  <article class="panel">
+    <div class="panel-heading">
+      <h3>Preparer workload</h3>
+    </div>
+    <div id="preparer-summary" class="status-list"></div>
+  </article>
+</section>
 
-    <section class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Client</th>
-            <th>Tax Year</th>
-            <th>Date Received</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
+<section class="panel">
+  <div class="panel-heading">
+    <h3>Returns requiring attention</h3>
+    <button id="refresh-dashboard">Refresh</button>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr>
+        <th>Client</th><th>Year</th><th>Status</th>
+        <th>Follow-up</th><th>Preparer</th><th>Balance</th>
+      </tr></thead>
+      <tbody id="attention-body"></tbody>
+    </table>
+  </div>
+</section>
 
-        <tbody id="return-table-body"></tbody>
-      </table>
-    </section>
-
-    <p id="dashboard-message" role="status"></p>
   </main>
-
   <script type="module" src="./js/dashboard.js"></script>
 </body>
 </html>

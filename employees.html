@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employees | Smith Tax Tracker</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Smith Enterprises Tax Tracker</h1>
+      <p data-employee-name></p>
+    </div>
+    
+<nav class="app-nav">
+  <button data-nav="dashboard">Dashboard</button>
+  <button data-nav="clients">Clients</button>
+  <button data-nav="reports">Reports</button>
+  <button data-nav="employees" data-admin-only>Employees</button>
+  <button data-nav="import" data-admin-only>Import</button>
+  <button data-nav="settings">Settings</button>
+  <button data-logout>Sign Out</button>
+</nav>
+
+  </header>
+
+  <main class="app-container">
+    <section class="page-heading">
+      <div>
+        <h2>Employees</h2>
+        <p>View employee access and active return assignments.</p>
+      </div>
+    </section>
+    
+<section class="panel">
+  <div class="panel-heading"><h3>Employee directory</h3></div>
+  <p id="employee-message" class="page-message"></p>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Active</th><th>Assigned returns</th></tr></thead>
+      <tbody id="employee-body"></tbody>
+    </table>
+  </div>
+  <p class="muted">Create authentication users in Supabase Authentication, then create or update their matching profile record.</p>
+</section>
+
+  </main>
+  <script type="module" src="./js/employees.js"></script>
+</body>
+</html>

@@ -2,81 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clients | Smith Tax Tracker</title>
   <link rel="stylesheet" href="./css/styles.css">
 </head>
-
 <body>
   <header class="app-header">
     <div>
       <h1>Smith Enterprises Tax Tracker</h1>
-      <p id="employee-name"></p>
+      <p data-employee-name></p>
     </div>
+    
+<nav class="app-nav">
+  <button data-nav="dashboard">Dashboard</button>
+  <button data-nav="clients">Clients</button>
+  <button data-nav="reports">Reports</button>
+  <button data-nav="employees" data-admin-only>Employees</button>
+  <button data-nav="import" data-admin-only>Import</button>
+  <button data-nav="settings">Settings</button>
+  <button data-logout>Sign Out</button>
+</nav>
 
-    <nav class="header-actions">
-      <button id="dashboard-button">Dashboard</button>
-      <button id="add-client-button">Add Client</button>
-      <button id="logout-button">Sign Out</button>
-    </nav>
   </header>
 
   <main class="app-container">
-    <section class="page-title-row">
+    <section class="page-heading">
       <div>
-        <h2>All Clients</h2>
-        <p>Search and open individual or business client records.</p>
+        <h2>Clients</h2>
+        <p>Search, filter, open, and create client records.</p>
       </div>
-
-      <strong id="client-count">0 clients</strong>
     </section>
+    
+<section class="toolbar">
+  <input id="client-search" type="search" placeholder="Search name, client number, phone, or email">
+  <select id="type-filter">
+    <option value="">All types</option>
+    <option>Individual</option><option>Business</option>
+    <option>Nonprofit</option><option>Other</option>
+  </select>
+  <select id="active-filter">
+    <option value="">All statuses</option>
+    <option value="true">Active</option>
+    <option value="false">Inactive</option>
+  </select>
+  <button id="add-client" class="primary">Add client</button>
+</section>
 
-    <section class="toolbar clients-toolbar">
-      <input
-        id="client-search"
-        type="search"
-        placeholder="Search client number, name, business, phone, or email"
-      >
+<section class="panel">
+  <div class="panel-heading">
+    <h3>Client directory</h3>
+    <strong id="client-count">0 clients</strong>
+  </div>
+  <p id="clients-message" class="page-message"></p>
+  <div class="table-wrapper">
+    <table>
+      <thead><tr>
+        <th>Client #</th><th>Name</th><th>Type</th>
+        <th>Phone</th><th>Email</th><th>Status</th><th>Returns</th>
+      </tr></thead>
+      <tbody id="clients-body"></tbody>
+    </table>
+  </div>
+</section>
 
-      <select id="client-type-filter">
-        <option value="">All client types</option>
-        <option value="Individual">Individual</option>
-        <option value="Business">Business</option>
-        <option value="Nonprofit">Nonprofit</option>
-        <option value="Other">Other</option>
-      </select>
-
-      <select id="active-filter">
-        <option value="">Active and inactive</option>
-        <option value="true">Active only</option>
-        <option value="false">Inactive only</option>
-      </select>
-    </section>
-
-    <section class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Client Number</th>
-            <th>Client</th>
-            <th>Type</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Returns</th>
-          </tr>
-        </thead>
-
-        <tbody id="clients-table-body"></tbody>
-      </table>
-    </section>
-
-    <p id="clients-message" role="status"></p>
   </main>
-
   <script type="module" src="./js/clients.js"></script>
 </body>
 </html>

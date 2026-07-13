@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Smith Tax Tracker</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Smith Enterprises Tax Tracker</h1>
+      <p data-employee-name></p>
+    </div>
+    
+<nav class="app-nav">
+  <button data-nav="dashboard">Dashboard</button>
+  <button data-nav="clients">Clients</button>
+  <button data-nav="reports">Reports</button>
+  <button data-nav="employees" data-admin-only>Employees</button>
+  <button data-nav="import" data-admin-only>Import</button>
+  <button data-nav="settings">Settings</button>
+  <button data-logout>Sign Out</button>
+</nav>
+
+  </header>
+
+  <main class="app-container">
+    <section class="page-heading">
+      <div>
+        <h2>Settings</h2>
+        <p>Review your signed-in session and application connection.</p>
+      </div>
+    </section>
+    
+<section class="content-grid two-column">
+  <article class="panel">
+    <h3>Signed-in employee</h3>
+    <dl class="detail-list">
+      <dt>Name</dt><dd id="setting-name"></dd>
+      <dt>Email</dt><dd id="setting-email"></dd>
+      <dt>Role</dt><dd id="setting-role"></dd>
+      <dt>User ID</dt><dd id="setting-user-id"></dd>
+    </dl>
+  </article>
+  <article class="panel">
+    <h3>Application</h3>
+    <dl class="detail-list">
+      <dt>Version</dt><dd>2.0</dd>
+      <dt>Database</dt><dd>Supabase PostgreSQL</dd>
+      <dt>Hosting</dt><dd>GitHub Pages / local Live Server</dd>
+      <dt>Data policy</dt><dd>Workflow data only for POC</dd>
+    </dl>
+  </article>
+</section>
+
+  </main>
+  <script type="module" src="./js/settings.js"></script>
+</body>
+</html>
