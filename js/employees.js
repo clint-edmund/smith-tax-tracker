@@ -1,5 +1,5 @@
 import {
-  supabase, requireSession, escapeHtml, setMessage, clearMessage
+  supabase, requireSession, escapeHtml, setMessage, clearMessage, ROLE_GROUPS
 } from "./app.js";
 
 const message = document.querySelector("#employee-message");
@@ -33,5 +33,5 @@ async function loadEmployees() {
   clearMessage(message);
 }
 
-await requireSession({ administratorOnly: true });
+await requireSession({ allowedRoles: ROLE_GROUPS.EMPLOYEE_PAGE_USERS });
 loadEmployees();

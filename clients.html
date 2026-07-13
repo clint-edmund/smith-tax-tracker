@@ -16,9 +16,9 @@
 <nav class="app-nav">
   <button data-nav="dashboard">Dashboard</button>
   <button data-nav="clients">Clients</button>
-  <button data-nav="reports">Reports</button>
-  <button data-nav="employees" data-admin-only>Employees</button>
-  <button data-nav="import" data-admin-only>Import</button>
+  <button data-nav="reports" data-roles="administrator,office_manager,senior_preparer,preparer,bookkeeper,read_only">Reports</button>
+  <button data-nav="employees" data-roles="administrator,office_manager">Employees</button>
+  <button data-nav="import" data-roles="administrator,office_manager">Import</button>
   <button data-nav="settings">Settings</button>
   <button data-logout>Sign Out</button>
 </nav>
@@ -45,7 +45,7 @@
     <option value="true">Active</option>
     <option value="false">Inactive</option>
   </select>
-  <button id="add-client" class="primary">Add client</button>
+  <button id="add-client" class="primary" data-roles="administrator,office_manager,senior_preparer,preparer,receptionist">Add client</button>
 </section>
 
 <section class="panel">

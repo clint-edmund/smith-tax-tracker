@@ -1,5 +1,5 @@
 import {
-  supabase, requireSession, escapeHtml, setMessage, clearMessage, cleanValue
+  supabase, requireSession, escapeHtml, setMessage, clearMessage, cleanValue, ROLE_GROUPS
 } from "./app.js";
 
 let rows = [];
@@ -90,4 +90,4 @@ document.querySelector("#run-import").addEventListener("click", async () => {
   setMessage(message, `${records.length} clients imported or updated.`, "success");
 });
 
-auth = await requireSession({ administratorOnly: true });
+auth = await requireSession({ allowedRoles: ROLE_GROUPS.IMPORT_USERS });

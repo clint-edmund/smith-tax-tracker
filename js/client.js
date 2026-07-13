@@ -149,79 +149,23 @@ async function loadReturns() {
 }
 
 async function loadStatusHistory() {
-  if (!returnId) {
-    return;
-  }
-
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("status_history")
     .select(`
-      previous_status,
-      new_status,
-      change_note,
-      changed_at,
-      profiles!status_history_changed_by_profile_fkey (
-        employee_name
-      )
+      previous_status, new_status, change_note, changed_at,
+      profiles!status_history_changed_by_fkey(employee_name)
     `)
     .eq("tax_return_id", returnId)
-    .order("changed_at", {
-      ascending: false
-    });
+    .order("changed_at", { ascending: false });
 
-  if (error) {
-    console.error("Status history loading failed:", {
-      message: error.message,
-      details: error.details,
-      hint: error.hint,
-      code: error.code
-    });
-
-    document.querySelector(
-      "#status-history"
-    ).innerHTML = `
-      <p class="page-message error">
-        Status history could not be loaded:
-        ${escapeHtml(error.message)}
-      </p>
-    `;
-
-    return;
-  }
-
-  document.querySelector(
-    "#status-history"
-  ).innerHTML =
+  document.querySelector("#status-history").innerHTML =
     (data || []).map((row) => `
       <div class="timeline-item">
-        <strong>
-          ${escapeHtml(
-            row.previous_status || "Initial status"
-          )}
-          →
-          ${escapeHtml(row.new_status)}
-        </strong>
-
-        <span>
-          ${formatDateTime(row.changed_at)}
-          ·
-          ${escapeHtml(
-            row.profiles?.employee_name ||
-            "Employee"
-          )}
-        </span>
-
-        <p>
-          ${escapeHtml(
-            row.change_note ||
-            "No note entered."
-          )}
-        </p>
+        <strong>${escapeHtml(row.new_status)}</strong>
+        <span>${formatDateTime(row.changed_at)} · ${escapeHtml(row.profiles?.employee_name || "Employee")}</span>
+        <p>${escapeHtml(row.change_note || "")}</p>
       </div>
-    `).join("") ||
-    `<p class="muted">
-      No status history has been recorded.
-    </p>`;
+    `).join("") || `<p class="muted">No status history.</p>`;
 }
 
 async function loadPaymentHistory() {

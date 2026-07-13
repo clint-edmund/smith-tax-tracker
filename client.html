@@ -16,9 +16,9 @@
 <nav class="app-nav">
   <button data-nav="dashboard">Dashboard</button>
   <button data-nav="clients">Clients</button>
-  <button data-nav="reports">Reports</button>
-  <button data-nav="employees" data-admin-only>Employees</button>
-  <button data-nav="import" data-admin-only>Import</button>
+  <button data-nav="reports" data-roles="administrator,office_manager,senior_preparer,preparer,bookkeeper,read_only">Reports</button>
+  <button data-nav="employees" data-roles="administrator,office_manager">Employees</button>
+  <button data-nav="import" data-roles="administrator,office_manager">Import</button>
   <button data-nav="settings">Settings</button>
   <button data-logout>Sign Out</button>
 </nav>
@@ -49,14 +49,14 @@
     <label>Preferred contact<select id="preferred-contact"><option value="">Not selected</option><option>Phone</option><option>Email</option><option>Text</option></select></label>
     <label>Status<select id="client-active"><option value="true">Active</option><option value="false">Inactive</option></select></label>
     <label class="span-2">Notes<textarea id="client-notes" rows="3"></textarea></label>
-    <div class="form-actions span-2"><button type="submit" class="primary">Save client</button></div>
+    <div class="form-actions span-2"><button type="submit" class="primary" data-roles="administrator,office_manager,senior_preparer,preparer,receptionist">Save client</button></div>
   </form>
 </section>
 
 <section id="returns-panel" class="panel hidden">
   <div class="panel-heading">
     <h3>Client returns</h3>
-    <button id="new-return">New return</button>
+    <button id="new-return" data-roles="administrator,office_manager,senior_preparer,preparer">New return</button>
   </div>
   <div class="table-wrapper">
     <table>
@@ -83,7 +83,7 @@
     <label>Amount paid<input id="amount-paid" readonly></label>
     <label>Balance due<input id="balance-due" readonly></label>
     <label class="span-2">Return notes<textarea id="return-notes" rows="3"></textarea></label>
-    <div class="form-actions span-2"><button type="submit" class="primary">Save return</button></div>
+    <div class="form-actions span-2"><button type="submit" class="primary" data-roles="administrator,office_manager,senior_preparer,preparer">Save return</button></div>
   </form>
 </section>
 
@@ -103,7 +103,7 @@
       </select></label>
       <label>Follow-up date<input id="status-follow-up" type="date"></label>
       <label>Note<textarea id="status-note" rows="3"></textarea></label>
-      <button type="submit" class="primary">Update status</button>
+      <button type="submit" class="primary" data-roles="administrator,office_manager,senior_preparer,preparer,receptionist">Update status</button>
     </form>
     <div class="timeline" id="status-history"></div>
   </article>
@@ -116,7 +116,7 @@
       <label>Method<select id="payment-method"><option value="">Not selected</option><option>Cash</option><option>Check</option><option>Credit Card</option><option>Debit Card</option><option>ACH</option><option>Other</option></select></label>
       <label>Reference<input id="payment-reference"></label>
       <label>Notes<textarea id="payment-notes" rows="3"></textarea></label>
-      <button type="submit" class="primary">Record payment</button>
+      <button type="submit" class="primary" data-roles="administrator,office_manager,senior_preparer,preparer,receptionist,bookkeeper">Record payment</button>
     </form>
     <div class="timeline" id="payment-history"></div>
   </article>

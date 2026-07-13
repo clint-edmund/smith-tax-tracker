@@ -1,6 +1,6 @@
 import {
   supabase, requireSession, formatCurrency, formatDate,
-  clientName, escapeHtml, downloadCsv, setMessage, clearMessage
+  clientName, escapeHtml, downloadCsv, setMessage, clearMessage, ROLE_GROUPS
 } from "./app.js";
 
 let exportRows = [];
@@ -86,7 +86,7 @@ async function runReport() {
   clearMessage(message);
 }
 
-await requireSession();
+await requireSession({ allowedRoles: ROLE_GROUPS.REPORT_USERS });
 document.querySelector("#run-report").addEventListener("click", runReport);
 document.querySelector("#export-report").addEventListener("click", () => {
   downloadCsv("smith-enterprises-report.csv", exportRows);
