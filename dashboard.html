@@ -1,1 +1,113 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0" > <title> Dashboard | Smith Tax Tracker </title> <link rel="stylesheet" href="./css/styles.css" > </head> <body> <header class="app-header"> <div> <h1> Smith Enterprises Tax Tracker </h1> <p id="employee-name"></p> </div> <button id="logout-button"> Sign Out </button> </header> <main class="app-container"> <section class="dashboard-grid"> <article class="summary-card"> <span>Total Returns</span> <strong id="total-returns">0</strong> </article> <article class="summary-card"> <span>Documents Received</span> <strong id="documents-received">0</strong> </article> <article class="summary-card"> <span>In Preparation</span> <strong id="in-preparation">0</strong> </article> <article class="summary-card"> <span>Waiting for Client</span> <strong id="waiting-client">0</strong> </article> <article class="summary-card"> <span>Completed</span> <strong id="completed">0</strong> </article> <article class="summary-card"> <span>Outstanding Balance</span> <strong id="outstanding-balance"> $0.00 </strong> </article> </section> <section class="toolbar"> <input id="search-input" type="search" placeholder="Search name, business, or client number" > <select id="status-filter"> <option value="">All statuses</option> <option>Documents Received</option> <option>Initial Review</option> <option>Missing Information</option> <option>Waiting for Client</option> <option>Ready for Preparation</option> <option>In Preparation</option> <option>Ready for Quality Review</option> <option>Corrections Required</option> <option>Ready for Client Signature</option> <option>Ready to File</option> <option>E-Filed</option> <option>Federal Accepted</option> <option>State Accepted</option> <option>Rejected</option> <option>Amendment Required</option> <option>Completed</option> <option>On Hold</option> <option>Cancelled</option> </select> <button id="add-client-button"> Add Client </button> </section> <section class="table-wrapper"> <table> <thead> <tr> <th>Client</th> <th>Tax Year</th> <th>Date Received</th> <th>Status</th> <th>Payment</th> <th>Balance</th> </tr> </thead> <tbody id="return-table-body"></tbody> </table> </section> <p id="dashboard-message" role="status"></p> </main> <script type="module" src="./js/dashboard.js" ></script> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Dashboard | Smith Tax Tracker</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Smith Enterprises Tax Tracker</h1>
+      <p id="employee-name"></p>
+    </div>
+
+    <nav class="header-actions">
+      <button id="clients-button">All Clients</button>
+      <button id="logout-button">Sign Out</button>
+    </nav>
+  </header>
+
+  <main class="app-container">
+    <section class="dashboard-grid">
+      <article class="summary-card">
+        <span>Total Returns</span>
+        <strong id="total-returns">0</strong>
+      </article>
+
+      <article class="summary-card">
+        <span>Documents Received</span>
+        <strong id="documents-received">0</strong>
+      </article>
+
+      <article class="summary-card">
+        <span>In Preparation</span>
+        <strong id="in-preparation">0</strong>
+      </article>
+
+      <article class="summary-card">
+        <span>Waiting for Client</span>
+        <strong id="waiting-client">0</strong>
+      </article>
+
+      <article class="summary-card">
+        <span>Completed</span>
+        <strong id="completed">0</strong>
+      </article>
+
+      <article class="summary-card">
+        <span>Outstanding Balance</span>
+        <strong id="outstanding-balance">$0.00</strong>
+      </article>
+    </section>
+
+    <section class="toolbar">
+      <input
+        id="search-input"
+        type="search"
+        placeholder="Search customer name or client number"
+      >
+
+      <select id="status-filter">
+        <option value="">All statuses</option>
+        <option>Documents Received</option>
+        <option>Initial Review</option>
+        <option>Missing Information</option>
+        <option>Waiting for Client</option>
+        <option>Ready for Preparation</option>
+        <option>In Preparation</option>
+        <option>Ready for Quality Review</option>
+        <option>Corrections Required</option>
+        <option>Ready for Client Signature</option>
+        <option>Ready to File</option>
+        <option>E-Filed</option>
+        <option>Federal Accepted</option>
+        <option>State Accepted</option>
+        <option>Rejected</option>
+        <option>Amendment Required</option>
+        <option>Completed</option>
+        <option>On Hold</option>
+        <option>Cancelled</option>
+      </select>
+
+      <button id="add-client-button">Add Client</button>
+    </section>
+
+    <section class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Tax Year</th>
+            <th>Date Received</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+
+        <tbody id="return-table-body"></tbody>
+      </table>
+    </section>
+
+    <p id="dashboard-message" role="status"></p>
+  </main>
+
+  <script type="module" src="./js/dashboard.js"></script>
+</body>
+</html>

@@ -1,1 +1,223 @@
-import { supabase } from "./config.js"; import { requireAuthentication, signOut } from "./auth-guard.js"; const tableBody = document.querySelector("#return-table-body"); const searchInput = document.querySelector("#search-input"); const statusFilter = document.querySelector("#status-filter"); const message = document.querySelector("#dashboard-message"); let returnRecords = []; function escapeHtml(value) { return String(value ?? "") .replaceAll("&", "&amp;") .replaceAll("<", "&lt;") .replaceAll(">", "&gt;") .replaceAll('"', "&quot;") .replaceAll("'", "&#039;"); } function formatCurrency(value) { return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(value || 0)); } function customerName(client) { if (client.business_name) { return client.business_name; } return [ client.first_name, client.last_name ] .filter(Boolean) .join(" ") .trim(); } function renderRows(records) { tableBody.innerHTML = ""; if (records.length === 0) { tableBody.innerHTML = ` <tr> <td colspan="6"> No matching returns found. </td> </tr> `; return; } for (const record of records) { const row = document.createElement("tr"); const client = record.clients || {}; row.innerHTML = ` <td> <strong> ${escapeHtml(customerName(client))} </strong> <br> <small> ${escapeHtml(client.client_number)} </small> </td> <td>${escapeHtml(record.tax_year)}</td> <td> ${escapeHtml( record.date_received || "Not entered" )} </td> <td> ${escapeHtml(record.current_status)} </td> <td> ${escapeHtml(record.payment_status)} </td> <td> ${formatCurrency(record.balance_due)} </td> `; row.addEventListener("click", () => { const encodedId = encodeURIComponent(record.id); window.location.href = `./client.html?return_id=${encodedId}`; }); tableBody.appendChild(row); } } function renderSummary(records) { const countByStatus = (status) => records.filter( (record) => record.current_status === status ).length; const outstanding = records.reduce( (total, record) => total + Number(record.balance_due || 0), 0 ); document.querySelector( "#total-returns" ).textContent = records.length; document.querySelector( "#documents-received" ).textContent = countByStatus("Documents Received"); document.querySelector( "#in-preparation" ).textContent = countByStatus("In Preparation"); document.querySelector( "#waiting-client" ).textContent = countByStatus("Waiting for Client"); document.querySelector( "#completed" ).textContent = countByStatus("Completed"); document.querySelector( "#outstanding-balance" ).textContent = formatCurrency(outstanding); } function applyFilters() { const searchValue = searchInput.value.trim().toLowerCase(); const selectedStatus = statusFilter.value; const filtered = returnRecords.filter((record) => { const client = record.clients || {}; const searchableText = [ client.client_number, client.first_name, client.last_name, client.business_name ] .filter(Boolean) .join(" ") .toLowerCase(); const searchMatches = !searchValue || searchableText.includes(searchValue); const statusMatches = !selectedStatus || record.current_status === selectedStatus; return searchMatches && statusMatches; }); renderRows(filtered); } async function loadReturns() { message.textContent = "Loading returns..."; const { data, error } = await supabase .from("tax_returns") .select(` id, tax_year, date_received, current_status, payment_status, balance_due, clients ( id, client_number, first_name, last_name, business_name ) `) .order("date_received", { ascending: false, nullsFirst: false }); if (error) { console.error( "Unable to load returns:", error ); message.textContent = "The return list could not be loaded."; return; } returnRecords = data || []; renderSummary(returnRecords); renderRows(returnRecords); message.textContent = ""; } async function initialize() { const session = await requireAuthentication(); if (!session) { return; } document.querySelector( "#employee-name" ).textContent = `${session.profile.employee_name} — ` + `${session.profile.role}`; document.querySelector( "#logout-button" ).addEventListener( "click", signOut ); searchInput.addEventListener( "input", applyFilters ); statusFilter.addEventListener( "change", applyFilters ); document.querySelector( "#add-client-button" ).addEventListener("click", () => { window.location.href = "./client.html"; }); await loadReturns(); } initialize();
+import { supabase } from "./config.js";
+
+import {
+  requireAuthentication,
+  signOut
+} from "./auth-guard.js";
+
+const tableBody =
+  document.querySelector("#return-table-body");
+
+const searchInput =
+  document.querySelector("#search-input");
+
+const statusFilter =
+  document.querySelector("#status-filter");
+
+const message =
+  document.querySelector("#dashboard-message");
+
+let returnRecords = [];
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
+  }).format(Number(value || 0));
+}
+
+function customerName(client) {
+  if (client.business_name) {
+    return client.business_name;
+  }
+
+  return [
+    client.first_name,
+    client.last_name
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+}
+
+function renderRows(records) {
+  tableBody.innerHTML = "";
+
+  if (records.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6">No matching returns found.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  for (const record of records) {
+    const row = document.createElement("tr");
+    const client = record.clients || {};
+
+    row.innerHTML = `
+      <td>
+        <strong>${escapeHtml(customerName(client))}</strong><br>
+        <small>${escapeHtml(client.client_number)}</small>
+      </td>
+      <td>${escapeHtml(record.tax_year)}</td>
+      <td>${escapeHtml(record.date_received || "Not entered")}</td>
+      <td>${escapeHtml(record.current_status)}</td>
+      <td>${escapeHtml(record.payment_status)}</td>
+      <td>${formatCurrency(record.balance_due)}</td>
+    `;
+
+    row.addEventListener("click", () => {
+      window.location.href =
+        `./client.html?return_id=${encodeURIComponent(record.id)}`;
+    });
+
+    tableBody.appendChild(row);
+  }
+}
+
+function renderSummary(records) {
+  const countByStatus = (status) =>
+    records.filter(
+      (record) => record.current_status === status
+    ).length;
+
+  const outstanding = records.reduce(
+    (total, record) =>
+      total + Number(record.balance_due || 0),
+    0
+  );
+
+  document.querySelector("#total-returns").textContent =
+    records.length;
+
+  document.querySelector("#documents-received").textContent =
+    countByStatus("Documents Received");
+
+  document.querySelector("#in-preparation").textContent =
+    countByStatus("In Preparation");
+
+  document.querySelector("#waiting-client").textContent =
+    countByStatus("Waiting for Client");
+
+  document.querySelector("#completed").textContent =
+    countByStatus("Completed");
+
+  document.querySelector("#outstanding-balance").textContent =
+    formatCurrency(outstanding);
+}
+
+function applyFilters() {
+  const searchValue =
+    searchInput.value.trim().toLowerCase();
+
+  const selectedStatus =
+    statusFilter.value;
+
+  const filtered =
+    returnRecords.filter((record) => {
+      const client = record.clients || {};
+
+      const searchableText = [
+        client.client_number,
+        client.first_name,
+        client.last_name,
+        client.business_name
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const searchMatches =
+        !searchValue ||
+        searchableText.includes(searchValue);
+
+      const statusMatches =
+        !selectedStatus ||
+        record.current_status === selectedStatus;
+
+      return searchMatches && statusMatches;
+    });
+
+  renderRows(filtered);
+}
+
+async function loadReturns() {
+  message.textContent = "Loading returns...";
+
+  const { data, error } = await supabase
+    .from("tax_returns")
+    .select(`
+      id,
+      tax_year,
+      date_received,
+      current_status,
+      payment_status,
+      balance_due,
+      clients (
+        id,
+        client_number,
+        first_name,
+        last_name,
+        business_name
+      )
+    `)
+    .order("date_received", {
+      ascending: false,
+      nullsFirst: false
+    });
+
+  if (error) {
+    console.error("Unable to load returns:", error);
+    message.textContent =
+      "The return list could not be loaded.";
+    return;
+  }
+
+  returnRecords = data || [];
+  renderSummary(returnRecords);
+  renderRows(returnRecords);
+  message.textContent = "";
+}
+
+async function initialize() {
+  const session =
+    await requireAuthentication();
+
+  if (!session) {
+    return;
+  }
+
+  document.querySelector("#employee-name").textContent =
+    `${session.profile.employee_name} — ${session.profile.role}`;
+
+  document.querySelector("#logout-button")
+    .addEventListener("click", signOut);
+
+  document.querySelector("#clients-button")
+    .addEventListener("click", () => {
+      window.location.href = "./clients.html";
+    });
+
+  searchInput.addEventListener("input", applyFilters);
+  statusFilter.addEventListener("change", applyFilters);
+
+  document.querySelector("#add-client-button")
+    .addEventListener("click", () => {
+      window.location.href = "./client.html";
+    });
+
+  await loadReturns();
+}
+
+initialize();

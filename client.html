@@ -1,1 +1,453 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0" > <title>Client Record | Smith Tax Tracker</title> <link rel="stylesheet" href="./css/styles.css" > </head> <body> <header class="app-header"> <div> <h1>Smith Enterprises Tax Tracker</h1> <p id="employee-name"></p> </div> <nav class="header-actions"> <button id="dashboard-button"> Dashboard </button> <button id="logout-button"> Sign Out </button> </nav> </header> <main class="app-container"> <p id="page-message" class="page-message" role="status"></p> <section class="form-card"> <div class="section-heading"> <div> <h2 id="client-heading">Add Client</h2> <p>Enter the customer's general contact information.</p> </div> </div> <form id="client-form"> <input id="client-id" type="hidden"> <div class="form-grid"> <div> <label for="client-number"> Client Number </label> <input id="client-number" type="text" placeholder="SE-000004" required > </div> <div> <label for="client-type"> Client Type </label> <select id="client-type" required> <option value="Individual"> Individual </option> <option value="Business"> Business </option> <option value="Nonprofit"> Nonprofit </option> <option value="Other"> Other </option> </select> </div> <div> <label for="first-name"> First Name </label> <input id="first-name" type="text"> </div> <div> <label for="last-name"> Last Name </label> <input id="last-name" type="text"> </div> <div class="full-width"> <label for="business-name"> Business Name </label> <input id="business-name" type="text"> </div> <div> <label for="phone"> Phone </label> <input id="phone" type="tel" autocomplete="tel" > </div> <div> <label for="email"> Email </label> <input id="email" type="email" autocomplete="email" > </div> <div> <label for="preferred-contact-method"> Preferred Contact Method </label> <select id="preferred-contact-method"> <option value="">Not selected</option> <option value="Phone">Phone</option> <option value="Email">Email</option> <option value="Text">Text</option> </select> </div> <div> <label for="client-active"> Client Status </label> <select id="client-active"> <option value="true">Active</option> <option value="false">Inactive</option> </select> </div> <div class="full-width"> <label for="client-notes"> General Notes </label> <textarea id="client-notes" rows="4" ></textarea> </div> </div> <div class="form-actions"> <button type="submit" id="save-client-button"> Save Client </button> </div> </form> </section> <section id="return-section" class="form-card hidden" > <div class="section-heading"> <div> <h2>Tax Return</h2> <p> Add or update the customer's return information. </p> </div> </div> <form id="return-form"> <input id="return-id" type="hidden"> <div class="form-grid"> <div> <label for="tax-year">Tax Year</label> <input id="tax-year" type="number" min="2000" max="2100" required > </div> <div> <label for="return-type">Return Type</label> <select id="return-type" required> <option value="Federal and State"> Federal and State </option> <option value="Federal Only"> Federal Only </option> <option value="State Only"> State Only </option> <option value="Business"> Business </option> <option value="Amended"> Amended </option> <option value="Other"> Other </option> </select> </div> <div> <label for="date-received"> Date Documents Received </label> <input id="date-received" type="date"> </div> <div> <label for="delivery-method"> Delivery Method </label> <select id="delivery-method"> <option value="">Not selected</option> <option value="Walk-in">Walk-in</option> <option value="Portal">Portal</option> <option value="Email">Email</option> <option value="Mail">Mail</option> <option value="Other">Other</option> </select> </div> <div> <label for="expected-completion-date"> Expected Completion </label> <input id="expected-completion-date" type="date" > </div> <div> <label for="follow-up-date"> Follow-up Date </label> <input id="follow-up-date" type="date"> </div> <div> <label for="preparation-fee"> Preparation Fee </label> <input id="preparation-fee" type="number" min="0" step="0.01" value="0" > </div> <div> <label for="additional-fees"> Additional Fees </label> <input id="additional-fees" type="number" min="0" step="0.01" value="0" > </div> <div> <label for="discount"> Discount </label> <input id="discount" type="number" min="0" step="0.01" value="0" > </div> <div> <label for="current-balance"> Current Balance </label> <input id="current-balance" type="text" value="$0.00" readonly > </div> <div class="full-width"> <label for="return-notes"> Return Notes </label> <textarea id="return-notes" rows="4" ></textarea> </div> </div> <div class="form-actions"> <button type="submit" id="save-return-button"> Save Return </button> </div> </form> </section> <section id="status-section" class="form-card hidden" > <div class="section-heading"> <div> <h2>Return Status</h2> <p id="current-status-display"> Current status: Not available </p> </div> </div> <form id="status-form"> <div class="form-grid"> <div> <label for="new-status"> New Status </label> <select id="new-status" required> <option>Documents Received</option> <option>Initial Review</option> <option>Missing Information</option> <option>Waiting for Client</option> <option>Ready for Preparation</option> <option>In Preparation</option> <option>Ready for Quality Review</option> <option>Corrections Required</option> <option>Ready for Client Signature</option> <option>Ready to File</option> <option>E-Filed</option> <option>Federal Accepted</option> <option>State Accepted</option> <option>Rejected</option> <option>Amendment Required</option> <option>Completed</option> <option>On Hold</option> <option>Cancelled</option> </select> </div> <div> <label for="status-follow-up-date"> Follow-up Date </label> <input id="status-follow-up-date" type="date" > </div> <div class="full-width"> <label for="status-note"> Status Note </label> <textarea id="status-note" rows="3" placeholder="Explain what changed or what is needed next." ></textarea> </div> </div> <div class="form-actions"> <button type="submit"> Update Status </button> </div> </form> <h3>Status History</h3> <div class="table-wrapper"> <table> <thead> <tr> <th>Date</th> <th>Previous</th> <th>New Status</th> <th>Changed By</th> <th>Note</th> </tr> </thead> <tbody id="status-history-body"></tbody> </table> </div> </section> <section id="payment-section" class="form-card hidden" > <div class="section-heading"> <div> <h2>Payments</h2> <p> Record preparation-fee payments received from the client. </p> </div> </div> <form id="payment-form"> <div class="form-grid"> <div> <label for="payment-date"> Payment Date </label> <input id="payment-date" type="date" required > </div> <div> <label for="payment-amount"> Amount </label> <input id="payment-amount" type="number" min="0.01" step="0.01" required > </div> <div> <label for="payment-method"> Payment Method </label> <select id="payment-method"> <option value="">Not selected</option> <option value="Cash">Cash</option> <option value="Check">Check</option> <option value="Credit Card">Credit Card</option> <option value="Debit Card">Debit Card</option> <option value="ACH">ACH</option> <option value="Other">Other</option> </select> </div> <div> <label for="payment-reference"> Reference Number </label> <input id="payment-reference" type="text" placeholder="Check or receipt number" > </div> <div class="full-width"> <label for="payment-notes"> Payment Notes </label> <textarea id="payment-notes" rows="3" ></textarea> </div> </div> <div class="form-actions"> <button type="submit"> Record Payment </button> </div> </form> <h3>Payment History</h3> <div class="table-wrapper"> <table> <thead> <tr> <th>Date</th> <th>Amount</th> <th>Method</th> <th>Reference</th> <th>Received By</th> <th>Notes</th> </tr> </thead> <tbody id="payment-history-body"></tbody> </table> </div> </section> </main> <script type="module" src="./js/client.js" ></script> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Client Record | Smith Tax Tracker</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Smith Enterprises Tax Tracker</h1>
+      <p id="employee-name"></p>
+    </div>
+
+    <nav class="header-actions">
+      <button id="dashboard-button">Dashboard</button>
+      <button id="clients-button">All Clients</button>
+      <button id="logout-button">Sign Out</button>
+    </nav>
+  </header>
+
+  <main class="app-container">
+    <p
+      id="page-message"
+      class="page-message"
+      role="status"
+    ></p>
+
+    <section class="form-card">
+      <div class="section-heading">
+        <div>
+          <h2 id="client-heading">Add Client</h2>
+          <p>Enter the customer's general contact information.</p>
+        </div>
+      </div>
+
+      <form id="client-form">
+        <input id="client-id" type="hidden">
+
+        <div class="form-grid">
+          <div>
+            <label for="client-number">Client Number</label>
+            <input
+              id="client-number"
+              type="text"
+              placeholder="SE-000004"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="client-type">Client Type</label>
+            <select id="client-type" required>
+              <option value="Individual">Individual</option>
+              <option value="Business">Business</option>
+              <option value="Nonprofit">Nonprofit</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="first-name">First Name</label>
+            <input id="first-name" type="text">
+          </div>
+
+          <div>
+            <label for="last-name">Last Name</label>
+            <input id="last-name" type="text">
+          </div>
+
+          <div class="full-width">
+            <label for="business-name">Business Name</label>
+            <input id="business-name" type="text">
+          </div>
+
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" autocomplete="tel">
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="email">
+          </div>
+
+          <div>
+            <label for="preferred-contact-method">
+              Preferred Contact Method
+            </label>
+
+            <select id="preferred-contact-method">
+              <option value="">Not selected</option>
+              <option value="Phone">Phone</option>
+              <option value="Email">Email</option>
+              <option value="Text">Text</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="client-active">Client Status</label>
+            <select id="client-active">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+
+          <div class="full-width">
+            <label for="client-notes">General Notes</label>
+            <textarea id="client-notes" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="save-client-button">
+            Save Client
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section
+      id="client-returns-section"
+      class="form-card hidden"
+    >
+      <div class="section-heading">
+        <div>
+          <h2>Client Returns</h2>
+          <p>Open an existing return or create a new return.</p>
+        </div>
+
+        <button id="new-return-button">New Return</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Tax Year</th>
+              <th>Return Type</th>
+              <th>Date Received</th>
+              <th>Status</th>
+              <th>Payment</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+
+          <tbody id="client-returns-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section
+      id="return-section"
+      class="form-card hidden"
+    >
+      <div class="section-heading">
+        <div>
+          <h2>Tax Return</h2>
+          <p>Add or update the customer's return information.</p>
+        </div>
+      </div>
+
+      <form id="return-form">
+        <input id="return-id" type="hidden">
+
+        <div class="form-grid">
+          <div>
+            <label for="tax-year">Tax Year</label>
+            <input
+              id="tax-year"
+              type="number"
+              min="2000"
+              max="2100"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="return-type">Return Type</label>
+            <select id="return-type" required>
+              <option value="Federal and State">Federal and State</option>
+              <option value="Federal Only">Federal Only</option>
+              <option value="State Only">State Only</option>
+              <option value="Business">Business</option>
+              <option value="Amended">Amended</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="assigned-preparer">Assigned Preparer</label>
+            <select id="assigned-preparer">
+              <option value="">Not assigned</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="date-received">Date Documents Received</label>
+            <input id="date-received" type="date">
+          </div>
+
+          <div>
+            <label for="delivery-method">Delivery Method</label>
+            <select id="delivery-method">
+              <option value="">Not selected</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Portal">Portal</option>
+              <option value="Email">Email</option>
+              <option value="Mail">Mail</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="expected-completion-date">
+              Expected Completion
+            </label>
+            <input id="expected-completion-date" type="date">
+          </div>
+
+          <div>
+            <label for="follow-up-date">Follow-up Date</label>
+            <input id="follow-up-date" type="date">
+          </div>
+
+          <div>
+            <label for="preparation-fee">Preparation Fee</label>
+            <input
+              id="preparation-fee"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+            >
+          </div>
+
+          <div>
+            <label for="additional-fees">Additional Fees</label>
+            <input
+              id="additional-fees"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+            >
+          </div>
+
+          <div>
+            <label for="discount">Discount</label>
+            <input
+              id="discount"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0"
+            >
+          </div>
+
+          <div>
+            <label for="current-balance">Current Balance</label>
+            <input
+              id="current-balance"
+              type="text"
+              value="$0.00"
+              readonly
+            >
+          </div>
+
+          <div class="full-width">
+            <label for="return-notes">Return Notes</label>
+            <textarea id="return-notes" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="save-return-button">
+            Save Return
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section
+      id="status-section"
+      class="form-card hidden"
+    >
+      <div class="section-heading">
+        <div>
+          <h2>Return Status</h2>
+          <p id="current-status-display">
+            Current status: Not available
+          </p>
+        </div>
+      </div>
+
+      <form id="status-form">
+        <div class="form-grid">
+          <div>
+            <label for="new-status">New Status</label>
+            <select id="new-status" required>
+              <option>Documents Received</option>
+              <option>Initial Review</option>
+              <option>Missing Information</option>
+              <option>Waiting for Client</option>
+              <option>Ready for Preparation</option>
+              <option>In Preparation</option>
+              <option>Ready for Quality Review</option>
+              <option>Corrections Required</option>
+              <option>Ready for Client Signature</option>
+              <option>Ready to File</option>
+              <option>E-Filed</option>
+              <option>Federal Accepted</option>
+              <option>State Accepted</option>
+              <option>Rejected</option>
+              <option>Amendment Required</option>
+              <option>Completed</option>
+              <option>On Hold</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="status-follow-up-date">Follow-up Date</label>
+            <input id="status-follow-up-date" type="date">
+          </div>
+
+          <div class="full-width">
+            <label for="status-note">Status Note</label>
+            <textarea
+              id="status-note"
+              rows="3"
+              placeholder="Explain what changed or what is needed next."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Update Status</button>
+        </div>
+      </form>
+
+      <h3>Status History</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Previous</th>
+              <th>New Status</th>
+              <th>Changed By</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+
+          <tbody id="status-history-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section
+      id="payment-section"
+      class="form-card hidden"
+    >
+      <div class="section-heading">
+        <div>
+          <h2>Payments</h2>
+          <p>
+            Record preparation-fee payments received from the client.
+          </p>
+        </div>
+      </div>
+
+      <form id="payment-form">
+        <div class="form-grid">
+          <div>
+            <label for="payment-date">Payment Date</label>
+            <input id="payment-date" type="date" required>
+          </div>
+
+          <div>
+            <label for="payment-amount">Amount</label>
+            <input
+              id="payment-amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="payment-method">Payment Method</label>
+            <select id="payment-method">
+              <option value="">Not selected</option>
+              <option value="Cash">Cash</option>
+              <option value="Check">Check</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="ACH">ACH</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="payment-reference">Reference Number</label>
+            <input
+              id="payment-reference"
+              type="text"
+              placeholder="Check or receipt number"
+            >
+          </div>
+
+          <div class="full-width">
+            <label for="payment-notes">Payment Notes</label>
+            <textarea id="payment-notes" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Record Payment</button>
+        </div>
+      </form>
+
+      <h3>Payment History</h3>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Reference</th>
+              <th>Received By</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+
+          <tbody id="payment-history-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/client.js"></script>
+</body>
+</html>

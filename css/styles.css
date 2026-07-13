@@ -105,6 +105,11 @@ textarea {
   color: #173f5f;
 }
 
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .app-container {
   width: min(1400px, calc(100% - 32px));
   margin: 30px auto;
@@ -171,25 +176,6 @@ tbody tr {
 
 tbody tr:hover {
   background: #f5f9fc;
-}
-
-@media (max-width: 700px) {
-  .app-header {
-    align-items: flex-start;
-    padding: 18px;
-  }
-
-  .app-container {
-    width: min(100% - 20px, 1400px);
-  }
-
-  .toolbar {
-    grid-template-columns: 1fr;
-  }
-}
-.header-actions {
-  display: flex;
-  gap: 10px;
 }
 
 .form-card {
@@ -272,7 +258,44 @@ input[readonly] {
   color: #1f2933;
 }
 
+.page-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.page-title-row h2 {
+  margin: 0 0 6px;
+}
+
+.page-title-row p {
+  margin: 0;
+  color: #52606d;
+}
+
+.clients-toolbar {
+  grid-template-columns:
+    minmax(250px, 2fr)
+    minmax(160px, 1fr)
+    minmax(160px, 1fr);
+}
+
 @media (max-width: 700px) {
+  .app-header {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .app-container {
+    width: min(100% - 20px, 1400px);
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
   .header-actions {
     flex-direction: column;
   }
@@ -287,5 +310,14 @@ input[readonly] {
 
   .form-card {
     padding: 18px;
+  }
+
+  .page-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .clients-toolbar {
+    grid-template-columns: 1fr;
   }
 }
