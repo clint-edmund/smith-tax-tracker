@@ -61,7 +61,7 @@ export async function requireSession(options={}) {
 }
 
 function bindNavigation(){
-  const routes={dashboard:"./dashboard.html",clients:"./clients.html",reports:"./reports.html",employees:"./employees.html",import:"./import.html",settings:"./settings.html"};
+  const routes={dashboard:"./dashboard.html",clients:"./clients.html",intakes: "./intakes.html",reports:"./reports.html",employees:"./employees.html",import:"./import.html",settings:"./settings.html"};
   document.querySelectorAll("[data-nav]").forEach(button=>{ if(button.dataset.bound==="true")return; const route=routes[button.dataset.nav]; if(!route)return; button.dataset.bound="true"; button.addEventListener("click",()=>window.location.href=route); });
   document.querySelectorAll("[data-logout]").forEach(button=>{ if(button.dataset.bound==="true")return; button.dataset.bound="true"; button.addEventListener("click",async()=>{await supabase.auth.signOut();window.location.href="./index.html";}); });
 }
