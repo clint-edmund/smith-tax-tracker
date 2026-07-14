@@ -59,7 +59,6 @@
     <dl class="detail-list intake-details">
       <dt>Confirmation</dt><dd id="detail-code"></dd>
       <dt>Name</dt><dd id="detail-name"></dd>
-      <dt>Date of birth</dt><dd id="detail-date-of-birth"></dd>
       <dt>Business</dt><dd id="detail-business"></dd>
       <dt>Email</dt><dd id="detail-email"></dd>
       <dt>Phone</dt><dd id="detail-phone"></dd>
@@ -162,6 +161,34 @@
       Complete Intake
     </button>
   </div>
+</section>
+
+
+<section id="sensitive-data-panel" class="panel" data-roles="administrator,office_manager,senior_preparer">
+  <div class="panel-heading">
+    <div>
+      <h3>Restricted sensitive information</h3>
+      <p class="muted">Every reveal requires a reason and is written to the audit log.</p>
+    </div>
+    <span class="sensitive-badge">Restricted</span>
+  </div>
+  <div class="security-callout danger-callout">Do not copy these values into email, chat, notes, screenshots, or reports.</div>
+  <label>Reason for revealing the information
+    <textarea id="sensitive-reveal-reason" rows="3" placeholder="Example: Entering verified direct-deposit information into TaxWise"></textarea>
+  </label>
+  <div class="form-actions action-wrap">
+    <button id="reveal-sensitive-data" type="button" class="danger-button">Reveal Sensitive Information</button>
+    <button id="hide-sensitive-data" type="button" hidden>Hide Now</button>
+  </div>
+  <div id="sensitive-values" class="sensitive-values hidden">
+    <dl class="detail-list">
+      <dt>Driver’s license</dt><dd id="full-license-number"></dd>
+      <dt>Routing number</dt><dd id="full-routing-number"></dd>
+      <dt>Account number</dt><dd id="full-account-number"></dd>
+      <dt>Automatically hides</dt><dd id="sensitive-countdown">60 seconds</dd>
+    </dl>
+  </div>
+  <p id="sensitive-message" class="page-message"></p>
 </section>
 
 <section class="panel">

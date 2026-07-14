@@ -1,0 +1,5 @@
+[functions.submit-sensitive-intake]
+verify_jwt = false
+
+[functions.reveal-sensitive-intake]
+verify_jwt = false

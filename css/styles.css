@@ -358,3 +358,10 @@ tbody tr[data-id]:hover { background: #f8fbfd; }
   height: 1px !important;
   overflow: hidden !important;
 }
+
+
+.sensitive-badge{border-radius:999px;padding:7px 11px;background:#7f1d1d;color:#fff;font-weight:800}
+.danger-callout{border-left-color:#991b1b;background:#fef2f2;color:#7f1d1d}
+.danger-button{background:#991b1b;color:#fff}
+.sensitive-values{margin-top:18px;border:2px solid #991b1b;border-radius:10px;background:#fff7f7;padding:18px}
+.sensitive-values dd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;font-size:1.05rem;font-weight:800;letter-spacing:.04em}

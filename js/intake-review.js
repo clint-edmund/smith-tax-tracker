@@ -2,7 +2,6 @@ import {
   supabase,
   requireSession,
   escapeHtml,
-  formatDate,
   formatDateTime,
   clientName,
   setMessage,
@@ -38,11 +37,6 @@ function populateDetails(row) {
 
   document.querySelector("#detail-name")
     .textContent = intakeFullName(row);
-  
-  document.querySelector("#detail-date-of-birth")
-    .textContent = row.date_of_birth 
-                     ? formatDateTime(row.date_of_birth)
-                     : "Not provided";
 
   document.querySelector("#detail-business")
     .textContent = row.business_name || "";
@@ -369,45 +363,6 @@ async function callReviewRpc(action) {
 
     return;
   }
-  
-  const shouldCopyBirthdate =
-  data?.client_id &&
-  (
-    action === "create_client" ||
-    (
-      action === "match_existing" &&
-      document.querySelector(
-        "#update-existing-client"
-      ).value === "true"
-    )
-  );
-
-if (shouldCopyBirthdate) {
-  const {
-    error: birthdateUpdateError
-  } = await supabase
-    .from("clients")
-    .update({
-      date_of_birth:
-        intake.date_of_birth || null
-    })
-    .eq("id", data.client_id);
-
-  if (birthdateUpdateError) {
-    console.error(
-      "Birthdate update failed:",
-      birthdateUpdateError
-    );
-
-    setMessage(
-      message,
-      "The intake was processed, but the birthdate could not be copied to the client record.",
-      "error"
-    );
-
-    return;
-  }
-}
 
   setMessage(
     message,
@@ -458,6 +413,61 @@ document.querySelector("#complete-intake")
     "click",
     () => callReviewRpc("complete")
   );
+
+
+let sensitiveHideTimer = null;
+let sensitiveCountdownTimer = null;
+function hideSensitiveValues() {
+  clearTimeout(sensitiveHideTimer);
+  clearInterval(sensitiveCountdownTimer);
+  ["#full-license-number", "#full-routing-number", "#full-account-number"].forEach((selector) => {
+    const element = document.querySelector(selector);
+    if (element) element.textContent = "";
+  });
+  document.querySelector("#sensitive-values")?.classList.add("hidden");
+  const hideButton = document.querySelector("#hide-sensitive-data");
+  if (hideButton) hideButton.hidden = true;
+}
+async function revealSensitiveValues() {
+  const reason = document.querySelector("#sensitive-reveal-reason").value.trim();
+  const output = document.querySelector("#sensitive-message");
+  if (reason.length < 10) {
+    setMessage(output, "Enter a specific reason of at least ten characters.", "error");
+    return;
+  }
+  hideSensitiveValues();
+  setMessage(output, "Requesting and decrypting the restricted information...", "info");
+  const { data, error } = await supabase.functions.invoke("reveal-sensitive-intake", {
+    body: { intake_id: intakeId, reason }
+  });
+  if (error) {
+    setMessage(output, "Sensitive information could not be revealed. Confirm your role and session.", "error");
+    return;
+  }
+  document.querySelector("#full-license-number").textContent = data.drivers_license_number;
+  document.querySelector("#full-routing-number").textContent = data.routing_number;
+  document.querySelector("#full-account-number").textContent = data.account_number;
+  document.querySelector("#sensitive-values").classList.remove("hidden");
+  document.querySelector("#hide-sensitive-data").hidden = false;
+  let seconds = 60;
+  document.querySelector("#sensitive-countdown").textContent = `${seconds} seconds`;
+  sensitiveCountdownTimer = setInterval(() => {
+    seconds -= 1;
+    document.querySelector("#sensitive-countdown").textContent = `${seconds} seconds`;
+    if (seconds <= 0) {
+      hideSensitiveValues();
+      setMessage(output, "Sensitive information was automatically hidden.", "info");
+    }
+  }, 1000);
+  sensitiveHideTimer = setTimeout(hideSensitiveValues, 60000);
+  setMessage(output, "Sensitive information revealed. This access has been logged.", "success");
+}
+
+
+document.querySelector("#reveal-sensitive-data")?.addEventListener("click", revealSensitiveValues);
+document.querySelector("#hide-sensitive-data")?.addEventListener("click", hideSensitiveValues);
+window.addEventListener("beforeunload", hideSensitiveValues);
+document.addEventListener("visibilitychange", () => { if (document.hidden) hideSensitiveValues(); });
 
 await requireSession();
 loadIntake();

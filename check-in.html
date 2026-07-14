@@ -78,17 +78,6 @@
           </label>
 
           <label>
-            Date of birth
-            <input
-              id="date-of-birth"
-              name="date_of_birth"
-              type="date"
-              autocomplete="bday"
-              required
-            >
-          </label>
-          
-          <label>
             Client type
             <select id="client-type" name="client_type">
               <option value="Individual">Individual</option>
@@ -216,9 +205,8 @@
         </div>
 
         <div class="security-callout">
-          For your protection, enter only the last four characters of
-          your driver's-license number. Staff will verify the complete
-          document in person.
+          Enter the complete driver’s-license number exactly as it appears.
+          It will be encrypted by the secure submission service before storage.
         </div>
 
         <div class="form-grid">
@@ -242,13 +230,13 @@
           </label>
 
           <label>
-            License number — last four
+            Driver’s-license number
             <input
-              id="drivers-license-last-four"
-              name="drivers_license_last_four"
-              minlength="4"
-              maxlength="4"
+              id="drivers-license-number"
+              name="drivers_license_number"
+              maxlength="40"
               autocomplete="off"
+              required
             >
           </label>
         </div>
@@ -260,9 +248,8 @@
         </div>
 
         <div class="security-callout">
-          Do not enter complete bank account or routing numbers.
-          Enter only the last four digits. Staff will verify the
-          complete information directly in the authorized tax software.
+          Enter the complete routing and account numbers. These values are encrypted
+          by the secure submission service before storage and every reveal is logged.
         </div>
 
         <div class="form-grid">
@@ -299,28 +286,30 @@
           </label>
 
           <label>
-            Routing number — last four
+            Routing number
             <input
-              id="routing-last-four"
-              name="routing_last_four"
+              id="routing-number"
+              name="routing_number"
               inputmode="numeric"
-              pattern="[0-9]{4}"
-              minlength="4"
-              maxlength="4"
+              pattern="[0-9]{9}"
+              minlength="9"
+              maxlength="9"
               autocomplete="off"
+              required
             >
           </label>
 
           <label>
-            Account number — last four
+            Checking or savings account number
             <input
-              id="account-last-four"
-              name="account_last_four"
+              id="account-number"
+              name="account_number"
               inputmode="numeric"
-              pattern="[0-9]{4}"
+              pattern="[0-9]{4,20}"
               minlength="4"
-              maxlength="4"
+              maxlength="20"
               autocomplete="off"
+              required
             >
           </label>
         </div>
