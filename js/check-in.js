@@ -159,7 +159,12 @@ form.addEventListener("submit", async (event) => {
       clean(
         document.querySelector("#last-name").value
       ),
-
+    
+    date_of_birth:
+      clean(
+        document.querySelector("#date-of-birth").value
+      ),
+        
     business_name:
       clean(
         document.querySelector("#business-name").value

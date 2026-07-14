@@ -41,6 +41,7 @@ function fillClient(row) {
   document.querySelector("#client-type").value = row.client_type || "Individual";
   document.querySelector("#first-name").value = row.first_name || "";
   document.querySelector("#last-name").value = row.last_name || "";
+  document.querySelector("#date-of-birth").value = row.date_of_birth || "";
   document.querySelector("#business-name").value = row.business_name || "";
   document.querySelector("#phone").value = row.phone || "";
   document.querySelector("#email").value = row.email || "";
@@ -253,6 +254,7 @@ document.querySelector("#client-form").addEventListener("submit", async (event) 
     client_type: document.querySelector("#client-type").value,
     first_name: cleanValue(document.querySelector("#first-name").value),
     last_name: cleanValue(document.querySelector("#last-name").value),
+    date_of_birth: cleanValue(document.querySelector("#date-of-birth").value),
     business_name: cleanValue(document.querySelector("#business-name").value),
     phone: cleanValue(document.querySelector("#phone").value),
     email: cleanValue(document.querySelector("#email").value),
