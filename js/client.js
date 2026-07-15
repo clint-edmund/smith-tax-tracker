@@ -148,24 +148,92 @@ async function loadReturns() {
   });
 }
 
-async function loadStatusHistory() {
-  const { data } = await supabase
+aasync function loadStatusHistory() {
+  if (!returnId) {
+    return;
+  }
+
+  const historyContainer =
+    document.querySelector("#status-history");
+
+  historyContainer.innerHTML = `
+    <p class="muted">
+      Loading status history...
+    </p>
+  `;
+
+  const { data, error } = await supabase
     .from("status_history")
     .select(`
-      previous_status, new_status, change_note, changed_at,
-      profiles!status_history_changed_by_fkey(employee_name)
+      id,
+      previous_status,
+      new_status,
+      change_note,
+      changed_at,
+      profiles!status_history_changed_by_profile_fkey (
+        employee_name
+      )
     `)
     .eq("tax_return_id", returnId)
-    .order("changed_at", { ascending: false });
+    .order("changed_at", {
+      ascending: false
+    });
 
-  document.querySelector("#status-history").innerHTML =
+  if (error) {
+    console.error(
+      "Status history loading failed:",
+      {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      }
+    );
+
+    historyContainer.innerHTML = `
+      <p class="page-message error">
+        Status history could not be loaded:
+        ${escapeHtml(error.message)}
+      </p>
+    `;
+
+    return;
+  }
+
+  historyContainer.innerHTML =
     (data || []).map((row) => `
       <div class="timeline-item">
-        <strong>${escapeHtml(row.new_status)}</strong>
-        <span>${formatDateTime(row.changed_at)} · ${escapeHtml(row.profiles?.employee_name || "Employee")}</span>
-        <p>${escapeHtml(row.change_note || "")}</p>
+        <strong>
+          ${escapeHtml(
+            row.previous_status ||
+            "Initial status"
+          )}
+          →
+          ${escapeHtml(row.new_status)}
+        </strong>
+
+        <span>
+          ${formatDateTime(row.changed_at)}
+          ·
+          ${escapeHtml(
+            row.profiles?.employee_name ||
+            "Employee"
+          )}
+        </span>
+
+        <p>
+          ${escapeHtml(
+            row.change_note ||
+            "No note entered."
+          )}
+        </p>
       </div>
-    `).join("") || `<p class="muted">No status history.</p>`;
+    `).join("") ||
+    `
+      <p class="muted">
+        No status history has been recorded.
+      </p>
+    `;
 }
 
 async function loadPaymentHistory() {
