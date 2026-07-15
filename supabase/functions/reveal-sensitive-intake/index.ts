@@ -279,6 +279,8 @@ Deno.serve(
         .select(`
           intake_id,
           client_id,
+          encrypted_social_security_number,
+          social_security_number_iv,
           encrypted_drivers_license,
           drivers_license_iv,
           encrypted_routing_number,
@@ -311,10 +313,16 @@ Deno.serve(
         );
 
       const [
+        socialSecurityNumber,
         driversLicenseNumber,
         routingNumber,
         accountNumber
       ] = await Promise.all([
+        decryptValue(
+          encryptionKey,
+          sensitive.encrypted_social_security_number,
+          sensitive.social_security_number_iv
+        ),
         decryptValue(
           encryptionKey,
           sensitive.encrypted_drivers_license,
@@ -376,6 +384,7 @@ Deno.serve(
             reason,
 
           fields_revealed: [
+            "social_security_number",
             "drivers_license_number",
             "routing_number",
             "account_number"
@@ -404,6 +413,9 @@ Deno.serve(
       }
 
       return jsonResponse({
+        social_security_number:
+          socialSecurityNumber,
+
         drivers_license_number:
           driversLicenseNumber,
 
