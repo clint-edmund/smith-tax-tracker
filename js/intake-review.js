@@ -2,6 +2,7 @@ import {
   supabase,
   requireSession,
   escapeHtml,
+  formatDate,
   formatDateTime,
   clientName,
   setMessage,
@@ -38,6 +39,11 @@ function populateDetails(row) {
   document.querySelector("#detail-name")
     .textContent = intakeFullName(row);
 
+  document.querySelector("#detail-date-of-birth")
+    .textContent = row.date_of_birth 
+                     ? formatDateTime(row.date_of_birth)
+                     : "Not provided";
+  
   document.querySelector("#detail-business")
     .textContent = row.business_name || "";
 
@@ -363,6 +369,45 @@ async function callReviewRpc(action) {
 
     return;
   }
+  
+  const shouldCopyBirthdate =
+  data?.client_id &&
+  (
+    action === "create_client" ||
+    (
+      action === "match_existing" &&
+      document.querySelector(
+        "#update-existing-client"
+      ).value === "true"
+    )
+  );
+
+if (shouldCopyBirthdate) {
+  const {
+    error: birthdateUpdateError
+  } = await supabase
+    .from("clients")
+    .update({
+      date_of_birth:
+        intake.date_of_birth || null
+    })
+    .eq("id", data.client_id);
+
+  if (birthdateUpdateError) {
+    console.error(
+      "Birthdate update failed:",
+      birthdateUpdateError
+    );
+
+    setMessage(
+      message,
+      "The intake was processed, but the birthdate could not be copied to the client record.",
+      "error"
+    );
+
+    return;
+  }
+}
 
   setMessage(
     message,
