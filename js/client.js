@@ -148,7 +148,7 @@ async function loadReturns() {
   });
 }
 
-aasync function loadStatusHistory() {
+async function loadStatusHistory() {
   if (!returnId) {
     return;
   }
