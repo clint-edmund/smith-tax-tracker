@@ -1,3 +1,431 @@
-import{createClient}from"https://esm.sh/@supabase/supabase-js@2";import{decryptValue,hashValue,importKey}from"../_shared/crypto.ts";
-const H={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization,x-client-info,apikey,content-type","Access-Control-Allow-Methods":"POST,OPTIONS"};const J=(b:Record<string,unknown>,s=200)=>new Response(JSON.stringify(b),{status:s,headers:{...H,"Cache-Control":"no-store","Content-Type":"application/json"}});
-Deno.serve(async q=>{if(q.method==="OPTIONS")return new Response("ok",{headers:H});if(q.method!=="POST")return J({error:"Method not allowed"},405);try{const u=Deno.env.get("SUPABASE_URL"),sr=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"),ek=Deno.env.get("INTAKE_ENCRYPTION_KEY"),ah=q.headers.get("Authorization");if(!u||!sr||!ek||!ah)return J({error:"Unauthorized"},401);const admin=createClient(u,sr,{auth:{persistSession:false,autoRefreshToken:false}}),token=ah.replace(/^Bearer\s+/i,""),{data:ud,error:ue}=await admin.auth.getUser(token);if(ue||!ud.user)return J({error:"Invalid session"},401);const{data:p,error:pe}=await admin.from("profiles").select("id,role,active").eq("id",ud.user.id).single();if(pe||!p?.active||!["administrator","office_manager","senior_preparer"].includes(p.role))return J({error:"Not authorized"},403);const b=await q.json(),iid=String(b.intake_id||"").trim(),reason=String(b.reason||"").trim();if(!iid||reason.length<10)return J({error:"A specific reason is required"},400);const{data:s,error:se}=await admin.from("walk_in_intake_sensitive").select("*").eq("intake_id",iid).single();if(se||!s)return J({error:"Sensitive record not found"},404);const key=await importKey(ek),[l,r,a]=await Promise.all([decryptValue(key,s.encrypted_drivers_license,s.drivers_license_iv),decryptValue(key,s.encrypted_routing_number,s.routing_number_iv),decryptValue(key,s.encrypted_account_number,s.account_number_iv)]),ip=await hashValue(q.headers.get("x-forwarded-for")||"unknown"),ua=await hashValue(q.headers.get("user-agent")||"unknown");const{error:le}=await admin.from("walk_in_sensitive_access_log").insert({intake_id:iid,client_id:s.client_id,accessed_by:p.id,access_reason:reason,fields_revealed:["drivers_license_number","routing_number","account_number"],source_ip_hash:ip,user_agent_hash:ua});if(le)return J({error:"Reveal blocked because audit log failed"},500);return J({drivers_license_number:l,routing_number:r,account_number:a});}catch{return J({error:"Reveal failed"},500)}});
+import {
+  createClient
+} from "https://esm.sh/@supabase/supabase-js@2";
+
+function base64ToBytes(
+  value: string
+): Uint8Array {
+  const binary = atob(value);
+
+  return Uint8Array.from(
+    binary,
+    (character) => character.charCodeAt(0)
+  );
+}
+
+function bytesToBase64(
+  value: Uint8Array
+): string {
+  let binary = "";
+
+  for (const byte of value) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+}
+
+async function importKey(
+  encodedKey: string
+): Promise<CryptoKey> {
+  const bytes =
+    base64ToBytes(encodedKey);
+
+  if (bytes.length !== 32) {
+    throw new Error(
+      "INTAKE_ENCRYPTION_KEY must decode to exactly 32 bytes."
+    );
+  }
+
+  return crypto.subtle.importKey(
+    "raw",
+    bytes,
+    {
+      name: "AES-GCM"
+    },
+    false,
+    [
+      "encrypt",
+      "decrypt"
+    ]
+  );
+}
+
+async function decryptValue(
+  key: CryptoKey,
+  ciphertext: string,
+  encodedIv: string
+): Promise<string> {
+  const decrypted =
+    await crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: base64ToBytes(encodedIv)
+      },
+      key,
+      base64ToBytes(ciphertext)
+    );
+
+  return new TextDecoder().decode(
+    decrypted
+  );
+}
+
+async function hashValue(
+  value: string
+): Promise<string> {
+  const digest =
+    await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(value)
+    );
+
+  return bytesToBase64(
+    new Uint8Array(digest)
+  );
+}
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+
+  "Access-Control-Allow-Methods":
+    "POST, OPTIONS"
+};
+
+function jsonResponse(
+  body: Record<string, unknown>,
+  status = 200
+): Response {
+  return new Response(
+    JSON.stringify(body),
+    {
+      status,
+      headers: {
+        ...corsHeaders,
+        "Cache-Control": "no-store",
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
+
+Deno.serve(
+  async (request: Request) => {
+    if (request.method === "OPTIONS") {
+      return new Response(
+        "ok",
+        {
+          headers: corsHeaders
+        }
+      );
+    }
+
+    if (request.method !== "POST") {
+      return jsonResponse(
+        {
+          error: "Method not allowed."
+        },
+        405
+      );
+    }
+
+    try {
+      const supabaseUrl =
+        Deno.env.get(
+          "SUPABASE_URL"
+        );
+
+      const serviceRoleKey =
+        Deno.env.get(
+          "SUPABASE_SERVICE_ROLE_KEY"
+        );
+
+      const encodedEncryptionKey =
+        Deno.env.get(
+          "INTAKE_ENCRYPTION_KEY"
+        );
+
+      const authorization =
+        request.headers.get(
+          "Authorization"
+        );
+
+      if (
+        !supabaseUrl ||
+        !serviceRoleKey ||
+        !encodedEncryptionKey ||
+        !authorization
+      ) {
+        return jsonResponse(
+          {
+            error: "Unauthorized."
+          },
+          401
+        );
+      }
+
+      const token =
+        authorization.replace(
+          /^Bearer\s+/i,
+          ""
+        );
+
+      const admin =
+        createClient(
+          supabaseUrl,
+          serviceRoleKey,
+          {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false
+            }
+          }
+        );
+
+      const {
+        data: userData,
+        error: userError
+      } = await admin.auth.getUser(
+        token
+      );
+
+      if (
+        userError ||
+        !userData.user
+      ) {
+        return jsonResponse(
+          {
+            error: "Invalid session."
+          },
+          401
+        );
+      }
+
+      const {
+        data: profile,
+        error: profileError
+      } = await admin
+        .from("profiles")
+        .select(
+          "id, role, active"
+        )
+        .eq(
+          "id",
+          userData.user.id
+        )
+        .single();
+
+      if (
+        profileError ||
+        !profile?.active ||
+        ![
+          "administrator",
+          "office_manager",
+          "senior_preparer"
+        ].includes(profile.role)
+      ) {
+        return jsonResponse(
+          {
+            error:
+              "Your role is not authorized to reveal sensitive information."
+          },
+          403
+        );
+      }
+
+      const body =
+        await request.json();
+
+      const intakeId =
+        String(
+          body.intake_id || ""
+        ).trim();
+
+      const reason =
+        String(
+          body.reason || ""
+        ).trim();
+
+      if (!intakeId) {
+        return jsonResponse(
+          {
+            error:
+              "Intake ID is required."
+          },
+          400
+        );
+      }
+
+      if (reason.length < 10) {
+        return jsonResponse(
+          {
+            error:
+              "A specific access reason of at least ten characters is required."
+          },
+          400
+        );
+      }
+
+      const {
+        data: sensitive,
+        error: sensitiveError
+      } = await admin
+        .from(
+          "walk_in_intake_sensitive"
+        )
+        .select(`
+          intake_id,
+          client_id,
+          encrypted_drivers_license,
+          drivers_license_iv,
+          encrypted_routing_number,
+          routing_number_iv,
+          encrypted_account_number,
+          account_number_iv
+        `)
+        .eq(
+          "intake_id",
+          intakeId
+        )
+        .single();
+
+      if (
+        sensitiveError ||
+        !sensitive
+      ) {
+        return jsonResponse(
+          {
+            error:
+              "No encrypted sensitive information was found for this intake."
+          },
+          404
+        );
+      }
+
+      const encryptionKey =
+        await importKey(
+          encodedEncryptionKey
+        );
+
+      const [
+        driversLicenseNumber,
+        routingNumber,
+        accountNumber
+      ] = await Promise.all([
+        decryptValue(
+          encryptionKey,
+          sensitive.encrypted_drivers_license,
+          sensitive.drivers_license_iv
+        ),
+
+        decryptValue(
+          encryptionKey,
+          sensitive.encrypted_routing_number,
+          sensitive.routing_number_iv
+        ),
+
+        decryptValue(
+          encryptionKey,
+          sensitive.encrypted_account_number,
+          sensitive.account_number_iv
+        )
+      ]);
+
+      const forwardedFor =
+        request.headers.get(
+          "x-forwarded-for"
+        ) ||
+        request.headers.get(
+          "cf-connecting-ip"
+        ) ||
+        "unknown";
+
+      const userAgent =
+        request.headers.get(
+          "user-agent"
+        ) || "unknown";
+
+      const [
+        sourceIpHash,
+        userAgentHash
+      ] = await Promise.all([
+        hashValue(forwardedFor),
+        hashValue(userAgent)
+      ]);
+
+      const {
+        error: logError
+      } = await admin
+        .from(
+          "walk_in_sensitive_access_log"
+        )
+        .insert({
+          intake_id:
+            intakeId,
+
+          client_id:
+            sensitive.client_id,
+
+          accessed_by:
+            profile.id,
+
+          access_reason:
+            reason,
+
+          fields_revealed: [
+            "drivers_license_number",
+            "routing_number",
+            "account_number"
+          ],
+
+          source_ip_hash:
+            sourceIpHash,
+
+          user_agent_hash:
+            userAgentHash
+        });
+
+      if (logError) {
+        console.error(
+          "Sensitive access log failed:",
+          logError
+        );
+
+        return jsonResponse(
+          {
+            error:
+              "The reveal was blocked because the audit log could not be written."
+          },
+          500
+        );
+      }
+
+      return jsonResponse({
+        drivers_license_number:
+          driversLicenseNumber,
+
+        routing_number:
+          routingNumber,
+
+        account_number:
+          accountNumber
+      });
+    } catch (error) {
+      console.error(
+        "Sensitive reveal failed:",
+        error
+      );
+
+      return jsonResponse(
+        {
+          error:
+            "The sensitive information could not be revealed."
+        },
+        500
+      );
+    }
+  }
+);
